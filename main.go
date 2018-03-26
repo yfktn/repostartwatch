@@ -30,16 +30,17 @@ func (r repo) getPage() string {
 	return b
 }
 
+// parsing page dan ambil nilai darinya
 func (r *repo) setRepoValueBasedOn(page string) (bool, error) {
 	doc := soup.HTMLParse(page)
 	elem := doc.Find("ul", "class", "pagehead-actions")
 	aSocialCount := elem.FindAll("a", "class", "social-count")
 	var e error
-	r.watch, e = strconv.Atoi(strings.TrimSpace(aSocialCount[0].Text()))
+	r.watch, e = strconv.Atoi(strings.Replace(strings.TrimSpace(aSocialCount[0].Text()), ",", "", -1))
 	if e != nil {
 		return false, e
 	}
-	r.start, e = strconv.Atoi(strings.TrimSpace(aSocialCount[1].Text()))
+	r.start, e = strconv.Atoi(strings.Replace(strings.TrimSpace(aSocialCount[1].Text()), ",", "", -1))
 	if e != nil {
 		return false, e
 	}
@@ -47,7 +48,7 @@ func (r *repo) setRepoValueBasedOn(page string) (bool, error) {
 }
 
 func (r repo) toString() string {
-	return "URL: " + r.url + " watch: " + string(r.watch) + " start: " + string(r.start)
+	return "URL: " + r.url + " watch: " + strconv.Itoa(r.watch) + " start: " + strconv.Itoa(r.start)
 }
 
 func main() {
@@ -60,7 +61,14 @@ func main() {
 	for i := 1; i < len(args); i++ {
 		repos[i-1].url = fmt.Sprintf("https://github.com/%s", args[i])
 		fmt.Println("Menganalisa ", repos[i-1].url)
-
 	}
-
+	// run
+	for _, v := range repos {
+		r, e := v.setRepoValueBasedOn(v.getPage())
+		if r {
+			fmt.Println(v.toString())
+		} else {
+			fmt.Println("Gagal memproses: ", v.url, " E: ", e)
+		}
+	}
 }

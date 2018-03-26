@@ -2,6 +2,7 @@
 package main
 
 import (
+	"fmt"
 	"testing"
 )
 
@@ -12,7 +13,7 @@ var ToTest string = `<ul class="pagehead-actions">
     Watch
   </a>
   <a class="social-count" href="/yfktn/yii-floating-fixed/watchers" aria-label="1 user is watching this repository">
-    1
+    1,023
   </a>
 
   </li>
@@ -24,7 +25,7 @@ var ToTest string = `<ul class="pagehead-actions">
   </a>
 
     <a class="social-count js-social-count" href="/yfktn/yii-floating-fixed/stargazers" aria-label="1 user starred this repository">
-      1
+      7,123
     </a>
 
   </li>
@@ -56,10 +57,11 @@ func TestPemberianNilai(t *testing.T) {
 	if e != nil {
 		t.Fatal("Terdapat masalah membaca", e)
 	}
-	if toTestR.watch != 1 {
+	if toTestR.watch != 1023 {
 		t.Fatalf("Nilai watch harusnya 1 tapi dapat %d", toTestR.watch)
 	}
-	if toTestR.start != 1 {
+	if toTestR.start != 7123 {
 		t.Fatalf("Nilai start harusnya 1 tapi dapat %d", toTestR.start)
 	}
+	fmt.Println(toTestR.toString())
 }
